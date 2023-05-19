@@ -1,0 +1,30 @@
+﻿<Application x:Class="UITest.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:UITest"
+             xmlns:viewModel="clr-namespace:UITest.ViewModel"
+             xmlns:view="clr-namespace:UITest.View"
+             xmlns:popups="clr-namespace:UITest.View.Popups"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Theme/MenuTabTheme.xaml"/>
+                <ResourceDictionary Source="/Theme/BetterButtonTheme.xaml"/>
+                <ResourceDictionary Source="/Theme/PopupTextBoxTheme.xaml"/>
+                <ResourceDictionary Source="/Theme/SearchbarTheme.xaml"/>
+                <ResourceDictionary Source="/Theme/BetterRadioButtonTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type viewModel:ProductViewModel}">
+                <view:ProductView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:PopupBaseViewModel}">
+                <popups:PopupBase/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:StorageViewModel}">
+                <view:StorageView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

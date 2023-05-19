@@ -1,0 +1,121 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+                    xmlns:controls="clr-namespace:UITest.Controls">
+    <SineEase x:Key="SineFunction"/>
+    
+    <Style x:Key="MenuTab" TargetType="controls:BetterRadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+        <Setter Property="Foreground" Value="#717277"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="ForegroundHover" Value="DarkGray"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:BetterRadioButton">
+                    <Grid Height="40">
+                        <Border x:Name="BackgroundBorder"
+                                Background="#1d1c23"
+                                BorderBrush="#242328"
+                                BorderThickness="1"
+                                Height="35"
+                                Opacity="0"
+                                CornerRadius="5"/>
+                        <Border x:Name="Indicator"
+                                HorizontalAlignment="Left"
+                                Background="#fa9805"
+                                CornerRadius="1"
+                                Height="20"
+                                Width="2"
+                                Opacity="0"/>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Left">
+                            <Border x:Name="IconBorder"
+                                    Width="24" Height="24"
+                                    Margin="10,0,0,0"
+                                    Background="#36353b"
+                                    CornerRadius="6">
+                                <fa:IconBlock Icon="{TemplateBinding Icon}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              VerticalAlignment="Center"
+                                              FontSize="12"/>
+                            </Border>
+                            <TextBlock Text="{TemplateBinding Content}"
+                                       Margin="10,0,0,0"
+                                       FontFamily="/Fonts/#Inter Bold"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       VerticalAlignment="Center"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       FontWeight="{TemplateBinding FontWeight}"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="BackgroundBorder"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0:0:0.5"
+                                                         EasingFunction="{StaticResource SineFunction}"/>
+                                        <DoubleAnimation Storyboard.TargetName="Indicator"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0:0:0.5"
+                                                         EasingFunction="{StaticResource SineFunction}"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="FontSize"
+                                                         To="13"
+                                                         Duration="0:0:0.3"
+                                                         EasingFunction="{StaticResource SineFunction}"/>
+                                        <ColorAnimation Storyboard.TargetName="IconBorder"
+                                                         Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                         To="#2B2B2B"
+                                                         Duration="0:0:0.2"
+                                                         EasingFunction="{StaticResource SineFunction}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="BackgroundBorder"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0"
+                                                         Duration="0:0:0.3"
+                                                         EasingFunction="{StaticResource SineFunction}"/>
+                                        <DoubleAnimation Storyboard.TargetName="Indicator"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0"
+                                                         Duration="0:0:0.3"
+                                                         EasingFunction="{StaticResource SineFunction}"/>
+                                        <ColorAnimation Storyboard.TargetName="IconBorder"
+                                                         Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                         To="#252429"
+                                                         Duration="0:0:0.3"
+                                                         EasingFunction="{StaticResource SineFunction}"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="FontSize"
+                                                         To="12"
+                                                         Duration="0:0:0.3"
+                                                         EasingFunction="{StaticResource SineFunction}"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=ForegroundHover}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Foreground" Value="#fa9805"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>
