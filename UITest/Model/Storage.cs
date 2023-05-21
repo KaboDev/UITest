@@ -11,13 +11,15 @@ namespace UITest.Model
         public string Name { get; }
         public string Location { get; }
         public float Size { get; }
+        public bool IsFull { get; }
 
         public List<StoragePlace> StoragePlaces { get; }
 
-        public Storage(string name, string location)
+        public Storage(string name, string location, float size)
         {
             Name = name;
             Location = location;
+            Size = size;
         
             StoragePlaces = new List<StoragePlace>();
         }

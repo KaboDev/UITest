@@ -13,11 +13,12 @@ namespace UITest.Model
 
         public List<StoragePlaceProduct> StoragePlaceProducts { get; }
 
-        public StoragePlace(string name, string location, List<StoragePlaceProduct> storagePlaceProducts)
+        public StoragePlace(string name, string location)
         {
             Name = name;
             Location = location;
-            StoragePlaceProducts = storagePlaceProducts;
+
+            StoragePlaceProducts = new List<StoragePlaceProduct>();
         }
 
         public bool AddStoragePlaceProduct(StoragePlaceProduct product)

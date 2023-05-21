@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="/Theme/BetterButtonTheme.xaml"/>
                 <ResourceDictionary Source="/Theme/PopupTextBoxTheme.xaml"/>
                 <ResourceDictionary Source="/Theme/SearchbarTheme.xaml"/>
+                <ResourceDictionary Source="/Theme/ProgressbarTheme.xaml"/>
                 <ResourceDictionary Source="/Theme/BetterRadioButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 

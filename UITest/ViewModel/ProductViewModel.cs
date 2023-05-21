@@ -16,7 +16,7 @@ namespace UITest.ViewModel
 {
     class ProductViewModel
     {
-        public ObservableCollection<Product> Products { get; }
+        public static ObservableCollection<Product> Products { get; private set; }
         public ObservableCollection<PopupBaseViewModel> Popups { get; }
 
         public RelayCommand AddPopupCommand { get; }

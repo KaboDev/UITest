@@ -83,6 +83,8 @@
     </ApplicationDefinition>
     <Compile Include="Converter\ImageSourceToVisibilityConverter.cs" />
     <Compile Include="Converter\IsLastItemConverter.cs" />
+    <Compile Include="Converter\ItemCountToVisibilityConverter.cs" />
+    <Compile Include="Converter\ProgressToColorConverter.cs" />
     <Compile Include="Core\CustomPopup.cs" />
     <Compile Include="Core\ElementTemplateSelector.cs" />
     <Compile Include="Core\ObservableObject.cs" />
@@ -132,6 +134,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Theme\PopupTextBoxTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Theme\ProgressbarTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -6,261 +6,290 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              xmlns:controls="clr-namespace:UITest.Controls"
+             xmlns:converter="clr-namespace:UITest.Converter"
+             xmlns:models="clr-namespace:UITest.Model"
              xmlns:local="clr-namespace:UITest.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:ProgressToColorConverter x:Key="ProgressToColorConverter"/>
+        <converter:ItemCountToVisibilityConverter x:Key="ItemCountToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid UseLayoutRounding="True">
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Hidden">
             <StackPanel Margin="20,0,20,0">
-                    <TextBlock Text="Storages"
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal"
+                            Margin="0,10">
+                        <TextBlock Text="Storages"
                                Foreground="White"
                                FontFamily="/Fonts/#Inter SemiBold"
                                FontSize="15"
-                               Margin="0,10"/>
-                    <ItemsControl>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel HorizontalAlignment="Left"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+                               VerticalAlignment="Center"/>
+                        <fa:IconBlock Icon="Warehouse"
+                                  Foreground="White"
+                                  FontSize="18"
+                                  Margin="10,0,0,0"/>
+                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding Storages}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Left"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid x:Name="StorageGrid">
-                                <Border Width="180"
-                                    VerticalAlignment="Top"
-                                    Height="75"
-                                    CornerRadius="5"
-                                    Background="#121318"
-                                    Margin="0,10,5,10">
-                                    <Grid>
-                                        <TextBlock Text="Lager"
-                                                 VerticalAlignment="Top"
-                                                 HorizontalAlignment="Left"
-                                                 Margin="20,10,0,0"
-                                                 Foreground="White" 
-                                                 FontSize="14"
-                                                 FontFamily="/Fonts/#Inter SemiBold"
-                                                 FontWeight="Bold"/>
-                                        <Border Background="{Binding Category}"
-                                            VerticalAlignment="Top"
-                                            HorizontalAlignment="Right"
-                                            Width="10" Height="10"
-                                            CornerRadius="10"
-                                            Margin="0,10,20,0"/>
-                                        <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Bottom"
-                                            HorizontalAlignment="Left"
-                                            Margin="20,0,0,10">
-                                            <Border BorderBrush="#242328"
+                                <controls:BetterRadioButton GroupName="Storage"
+                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl, Mode=FindAncestor}, Path=DataContext.SelectCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            BorderHover="#99C88827"
+                                                            BorderPress="#fa9805"
+                                                            Style="{StaticResource BetterRadioButton}">
+                                    <controls:BetterRadioButton.Content>
+                                        <Grid x:Name="StorageGrid">
+                                            <Border Width="180"
+                                                VerticalAlignment="Top"
+                                                Height="65"
+                                                CornerRadius="5"
+                                                BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=controls:BetterRadioButton, Mode=FindAncestor},Path=BorderBrush}"
+                                                BorderThickness="2"
+                                                Background="#121318"
+                                                Margin="0,10,5,10">
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Top"
+                                                    HorizontalAlignment="Left">
+                                                        <TextBlock Text="{Binding Name}"
+                                                       Margin="20,10,0,0"
+                                                       Foreground="White" 
+                                                       FontSize="14"
+                                                       FontFamily="/Fonts/#Inter SemiBold"/>
+                                                        <Border BorderBrush="#242328"
                                                     BorderThickness="1"
                                                     CornerRadius="3"
-                                                    Height="25">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <fa:IconBlock Icon="LocationDot"
-                                                                  Foreground="White"
-                                                                  Margin="5,0,0,0"/>
-                                                    <TextBlock Text="Germany" 
-                                                               VerticalAlignment="Center"
-                                                               Foreground="White"
-                                                               FontSize="12"
-                                                               FontFamily="/Fonts/#Inter SemiBold"
-                                                               FontWeight="Bold"
-                                                               Margin="5,0,5,0"/>
-                                                </StackPanel>
-                                            </Border>
-                                            <Border BorderBrush="#242328"
-                                                    BorderThickness="1"
-                                                    CornerRadius="3"
-                                                    Width="25"
-                                                    Margin="10,0,10,0">
-                                                <controls:BetterButton Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    Width="25" Height="25"
+                                                    Margin="10,10,0,0">
+                                                            <controls:BetterButton Command="{Binding DataContext.DeleteStorageCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                        CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=DataContext}"
                                                                        DefaultForeground="White"
                                                                        ForegroundHover="#fa9805"
                                                                        ForegroundPress="DarkOrange"
                                                                        Style="{StaticResource BetterButton}">
-                                                    <controls:BetterButton.Content>
-                                                        <fa:IconBlock Icon="TrashCan"
+                                                                <controls:BetterButton.Content>
+                                                                    <fa:IconBlock Icon="TrashCan"
                                                                       FontSize="14"/>
-                                                    </controls:BetterButton.Content>
-                                                </controls:BetterButton>
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Setter Property="Opacity" Value="0"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ElementName=StorageGrid, Path=IsMouseOver}" Value="True">
-                                                                <DataTrigger.EnterActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                </controls:BetterButton.Content>
+                                                            </controls:BetterButton>
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Setter Property="Opacity" Value="0"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding ElementName=StorageGrid, Path=IsMouseOver}" Value="True">
+                                                                            <DataTrigger.EnterActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                              To="1"
                                                                              Duration="0:0:0.3"
                                                                              EasingFunction="{StaticResource SineFunction}"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </DataTrigger.EnterActions>
-                                                                <DataTrigger.ExitActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </DataTrigger.EnterActions>
+                                                                            <DataTrigger.ExitActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                              To="0"
                                                                              Duration="0:0:0.1"
                                                                              EasingFunction="{StaticResource SineFunction}"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </DataTrigger.ExitActions>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                            </Border>
-                                        </StackPanel>
-                                        <Border Width="30" Height="30"
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </DataTrigger.ExitActions>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Vertical"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Bottom"
+                                            Margin="20,0,20,10">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="Filled:"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="12"
+                                                           Height="14"
+                                                           FontFamily="/Fonts/#Inter SemiBold"
+                                                           Foreground="#717277"
+                                                           Margin="0,0,5,0"/>
+                                                            <TextBlock Text="100%"
+                                                   Width="31"
+                                                           VerticalAlignment="Center"
+                                                           FontSize="12"
+                                                           Height="14"
+                                                           FontFamily="/Fonts/#Inter Medium"
+                                                           Foreground="White"
+                                                           Margin="0,0,5,0"/>
+                                                            <ProgressBar Minimum="0" Maximum="100" Value="30"
+                                                             Height="15"
+                                                             Width="60"
+                                                             Style="{StaticResource Progressbar}"
+                                                             Background="{Binding RelativeSource={RelativeSource Self}, Path=Value, Converter={StaticResource ProgressToColorConverter}}"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                    <Border Width="30" Height="30"
                                             VerticalAlignment="Bottom"
                                             HorizontalAlignment="Right"
                                             Margin="0,0,20,10"
                                             RenderOptions.BitmapScalingMode="Fant">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{Binding ImagePath}"
+                                                        <Border.Background>
+                                                            <ImageBrush ImageSource="{Binding ImagePath}"
                                                         Stretch="UniformToFill"/>
-                                            </Border.Background>
-                                        </Border>
-                                        <Grid VerticalAlignment="Top"
-                                          HorizontalAlignment="Left"
-                                          Opacity="0"
-                                          Margin="20,40,0,0">
-                                            <StackPanel Orientation="Vertical">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <fa:IconBlock Icon="WeightHanging"
+                                                        </Border.Background>
+                                                    </Border>
+                                                    <Grid VerticalAlignment="Top"
+                                              HorizontalAlignment="Left"
+                                              Opacity="0"
+                                              Margin="20,40,0,0">
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <fa:IconBlock Icon="LocationDot"
                                                               Foreground="White"/>
-                                                    <TextBlock Text="Weight"
+                                                                <TextBlock Text="Location"
                                                            Margin="5,0,0,0"
                                                            Foreground="White"
                                                            FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Weight, StringFormat={} {0}kg}"
+                                                                <TextBlock Text="{Binding Location}"
                                                            Margin="5,0,0,0"
                                                            Foreground="Gray"
                                                            FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal"
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal"
                                                         Margin="0,10,0,0">
-                                                    <fa:IconBlock Icon="Ruler"
+                                                                <fa:IconBlock Icon="Ruler"
                                                               Foreground="White"/>
-                                                    <TextBlock Text="Size"
+                                                                <TextBlock Text="Size"
                                                            Margin="5,0,0,0"
                                                            Foreground="White"
                                                            FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Size, StringFormat={} {0}m³}"
+                                                                <TextBlock Text="{Binding Size, StringFormat={} {0}m³}"
                                                            Margin="5,0,0,0"
                                                            Foreground="Gray"
                                                            FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal"
-                                                        Margin="0,10,0,0">
-                                                    <fa:IconBlock Icon="Location"
-                                                              Foreground="White"/>
-                                                    <TextBlock Text="Location"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="White"
-                                                           FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Location}"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="Gray"
-                                                           FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                            <Grid.Style>
-                                                <Style TargetType="Grid">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ElementName=ProductMainGrid, Path=IsMouseOver}" Value="True">
-                                                            <DataTrigger.EnterActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                        <Grid.Style>
+                                                            <Style TargetType="Grid">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ElementName=StorageGrid, Path=IsMouseOver}" Value="True">
+                                                                        <DataTrigger.EnterActions>
+                                                                            <BeginStoryboard>
+                                                                                <Storyboard>
+                                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                              To="1"
                                                                              Duration="0:0:0.3"
                                                                              EasingFunction="{StaticResource SineFunction}"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.EnterActions>
-                                                            <DataTrigger.ExitActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                                </Storyboard>
+                                                                            </BeginStoryboard>
+                                                                        </DataTrigger.EnterActions>
+                                                                        <DataTrigger.ExitActions>
+                                                                            <BeginStoryboard>
+                                                                                <Storyboard>
+                                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                                                              To="0"
                                                                              Duration="0:0:0.1"
                                                                              EasingFunction="{StaticResource SineFunction}"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.ExitActions>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Grid.Style>
+                                                                                </Storyboard>
+                                                                            </BeginStoryboard>
+                                                                        </DataTrigger.ExitActions>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Grid.Style>
+                                                    </Grid>
+                                                </Grid>
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                             To="125"
+                                                                             Duration="0:0:0.3"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.EnterActions>
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                             To="65"
+                                                                             Duration="0:0:0.3"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.ExitActions>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
                                         </Grid>
-                                    </Grid>
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Trigger.EnterActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Storyboard.TargetProperty="Height"
-                                                                             To="160"
-                                                                             Duration="0:0:0.3"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </Trigger.EnterActions>
-                                                    <Trigger.ExitActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Storyboard.TargetProperty="Height"
-                                                                             To="75"
-                                                                             Duration="0:0:0.3"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </Trigger.ExitActions>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                </Border>
-                            </Grid>
+                                    </controls:BetterRadioButton.Content>
+                                </controls:BetterRadioButton>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
-                        <system:String>#1</system:String>
-                        <system:String>#1</system:String>
-                        <system:String>#1</system:String>
-                        <system:String>#1</system:String>
-                        <system:String>#1</system:String>
-                        <system:String>#1</system:String>
                     </ItemsControl>
-                <TextBlock Text="Storage places"
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            Visibility="{Binding RelativeSource={RelativeSource Self},Path=DataContext.CurrentStoragePlaces.Count, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ItemCountToVisibilityConverter}}">
+                    <Border Background="#717277"
+                        Height="2"
+                        CornerRadius="1"
+                        Margin="0,20,10,20"/>
+                    <StackPanel Orientation="Horizontal"
+                            Margin="0,10">
+                        <TextBlock Text="Storage places"
                                Foreground="White"
                                FontFamily="/Fonts/#Inter SemiBold"
                                FontSize="15"
-                               Margin="0,10"/>
-                <ItemsControl>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel HorizontalAlignment="Left"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Border Width="180"
-                                    VerticalAlignment="Top"
-                                    Height="75"
-                                    CornerRadius="5"
-                                    Background="#121318"
-                                    Margin="0,10,5,10">
-                                    <Grid>
-                                        <TextBlock Text="{Binding Name}"
+                               VerticalAlignment="Center"/>
+                        <fa:IconBlock Icon="BoxArchive"
+                                  Foreground="White"
+                                  FontSize="18"
+                                  Margin="10,0,0,0"/>
+                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding CurrentStoragePlaces}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Left"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <controls:BetterRadioButton GroupName="Storage"
+                                                            Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl, Mode=FindAncestor}, Path=DataContext.SelectCommand}"
+                                                            CommandParameter="{Binding}"
+                                                            BorderHover="#99C88827"
+                                                            BorderPress="#fa9805"
+                                                            Style="{StaticResource BetterRadioButton}">
+                                    <controls:BetterRadioButton.Content>
+                                        <Grid>
+                                            <Border Width="180"
+                                                    VerticalAlignment="Top"
+                                                    Height="75"
+                                                    CornerRadius="5"
+                                                    BorderBrush="{Binding RelativeSource={RelativeSource AncestorType=controls:BetterRadioButton, Mode=FindAncestor},Path=BorderBrush}"
+                                                    BorderThickness="2"
+                                                    Background="#121318"
+                                                    Margin="0,10,5,10">
+                                                <Grid>
+                                                    <TextBlock Text="{Binding Name}"
                                                  VerticalAlignment="Top"
                                                  HorizontalAlignment="Left"
                                                  Margin="20,10,0,0"
@@ -268,47 +297,362 @@
                                                  FontSize="14"
                                                  FontFamily="/Fonts/#Inter SemiBold"
                                                  FontWeight="Bold"/>
-                                        <Border Background="{Binding Category}"
-                                            VerticalAlignment="Top"
-                                            HorizontalAlignment="Right"
-                                            Width="10" Height="10"
-                                            CornerRadius="10"
-                                            Margin="0,10,20,0"/>
-                                        <StackPanel Orientation="Horizontal"
+                                                    <StackPanel Orientation="Horizontal"
                                             VerticalAlignment="Bottom"
                                             HorizontalAlignment="Left"
                                             Margin="20,0,0,10">
-                                            <Border BorderBrush="#242328"
-                                            BorderThickness="1"
-                                            CornerRadius="3">
-                                                <TextBlock Text="{Binding Price,StringFormat={}{0:F2}€}"
-                                                   Margin="10,4,10,4"
-                                                   Foreground="White"
-                                                   FontSize="12"
-                                                   FontFamily="/Fonts/#Inter SemiBold"
-                                                   FontWeight="Bold"/>
-                                            </Border>
-                                            <Border BorderBrush="#242328"
+                                                        <Border Height="25"
+                                                                BorderBrush="#242328"
+                                                                BorderThickness="1"
+                                                                CornerRadius="3">
+                                                            <StackPanel Orientation="Horizontal"
+                                                                        VerticalAlignment="Center"
+                                                                        Margin="10,0,10,0">
+                                                                <fa:IconBlock Icon="LocationDot"
+                                                                              Foreground="White"
+                                                                              FontSize="12"
+                                                                              VerticalAlignment="Top"/>
+                                                                <TextBlock Text="{Binding Location}"
+                                                                           Foreground="White"
+                                                                           FontSize="12"
+                                                                           FontFamily="/Fonts/#Inter SemiBold"
+                                                                           Margin="5,0,0,0"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                        <Border BorderBrush="#242328"
                                                     BorderThickness="1"
                                                     CornerRadius="3"
                                                     Width="25"
                                                     Margin="10,0,10,0">
-                                                <controls:BetterButton Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                            <controls:BetterButton Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                        CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=DataContext}"
                                                                        DefaultForeground="White"
                                                                        ForegroundHover="#fa9805"
                                                                        ForegroundPress="DarkOrange"
                                                                        Style="{StaticResource BetterButton}">
-                                                    <controls:BetterButton.Content>
-                                                        <fa:IconBlock Icon="TrashCan"
+                                                                <controls:BetterButton.Content>
+                                                                    <fa:IconBlock Icon="TrashCan"
                                                                       FontSize="14"/>
-                                                    </controls:BetterButton.Content>
-                                                </controls:BetterButton>
+                                                                </controls:BetterButton.Content>
+                                                            </controls:BetterButton>
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Setter Property="Opacity" Value="0"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding ElementName=ProductMainGrid, Path=IsMouseOver}" Value="True">
+                                                                            <DataTrigger.EnterActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                             To="1"
+                                                                             Duration="0:0:0.3"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </DataTrigger.EnterActions>
+                                                                            <DataTrigger.ExitActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                             To="0"
+                                                                             Duration="0:0:0.1"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </DataTrigger.ExitActions>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                        </Border>
+                                                    </StackPanel>
+                                                    <Border Width="30" Height="30"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Right"
+                                            Margin="0,0,20,10"
+                                            RenderOptions.BitmapScalingMode="Fant">
+                                                        <Border.Background>
+                                                            <ImageBrush ImageSource="{Binding ImagePath}"
+                                                        Stretch="UniformToFill"/>
+                                                        </Border.Background>
+                                                    </Border>
+                                                    <Grid VerticalAlignment="Top"
+                                          HorizontalAlignment="Left"
+                                          Opacity="0"
+                                          Margin="20,40,0,0">
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <fa:IconBlock Icon="WeightHanging"
+                                                              Foreground="White"/>
+                                                                <TextBlock Text="Weight"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="White"
+                                                           FontFamily="/Fonts/#Inter SemiBold"/>
+                                                                <TextBlock Text="{Binding Weight, StringFormat={} {0}kg}"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="Gray"
+                                                           FontFamily="/Fonts/#Inter Bold"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal"
+                                                        Margin="0,10,0,0">
+                                                                <fa:IconBlock Icon="Ruler"
+                                                              Foreground="White"/>
+                                                                <TextBlock Text="Size"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="White"
+                                                           FontFamily="/Fonts/#Inter SemiBold"/>
+                                                                <TextBlock Text="{Binding Size, StringFormat={} {0}m³}"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="Gray"
+                                                           FontFamily="/Fonts/#Inter Bold"/>
+                                                            </StackPanel>
+                                                            <StackPanel Orientation="Horizontal"
+                                                        Margin="0,10,0,0">
+                                                                <fa:IconBlock Icon="Location"
+                                                              Foreground="White"/>
+                                                                <TextBlock Text="Location"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="White"
+                                                           FontFamily="/Fonts/#Inter SemiBold"/>
+                                                                <TextBlock Text="{Binding Location}"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="Gray"
+                                                           FontFamily="/Fonts/#Inter Bold"/>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                        <Grid.Style>
+                                                            <Style TargetType="Grid">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding ElementName=ProductMainGrid, Path=IsMouseOver}" Value="True">
+                                                                        <DataTrigger.EnterActions>
+                                                                            <BeginStoryboard>
+                                                                                <Storyboard>
+                                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                             To="1"
+                                                                             Duration="0:0:0.3"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                                </Storyboard>
+                                                                            </BeginStoryboard>
+                                                                        </DataTrigger.EnterActions>
+                                                                        <DataTrigger.ExitActions>
+                                                                            <BeginStoryboard>
+                                                                                <Storyboard>
+                                                                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                             To="0"
+                                                                             Duration="0:0:0.1"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                                </Storyboard>
+                                                                            </BeginStoryboard>
+                                                                        </DataTrigger.ExitActions>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Grid.Style>
+                                                    </Grid>
+                                                </Grid>
                                                 <Border.Style>
                                                     <Style TargetType="Border">
-                                                        <Setter Property="Opacity" Value="0"/>
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ElementName=ProductMainGrid, Path=IsMouseOver}" Value="True">
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                             To="160"
+                                                                             Duration="0:0:0.3"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.EnterActions>
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                             To="75"
+                                                                             Duration="0:0:0.3"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.ExitActions>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                            </Border>
+                                        </Grid>
+                                    </controls:BetterRadioButton.Content>
+                                </controls:BetterRadioButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                <StackPanel Orientation="Vertical"
+                            Visibility="{Binding RelativeSource={RelativeSource Self},Path=DataContext.CurrentStoragePlaceProducts.Count, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ItemCountToVisibilityConverter}}">
+                    <Border Background="#717277"
+                        Height="2"
+                        CornerRadius="1"
+                        Margin="0,20,10,20"/>
+                    <StackPanel Orientation="Horizontal"
+                            Margin="0,10">
+                        <TextBlock Text="Products"
+                               Foreground="White"
+                               FontFamily="/Fonts/#Inter SemiBold"
+                               FontSize="15"
+                               VerticalAlignment="Center"/>
+                        <fa:IconBlock Icon="CubesStacked"
+                                  Foreground="White"
+                                  FontSize="18"
+                                  Margin="10,0,0,0"/>
+                    </StackPanel>
+                    <ItemsControl ItemsSource="{Binding CurrentStoragePlaceProducts}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Left"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid x:Name="StoragePlaceProductGrid">
+                                    <Border Width="180"
+                                                    VerticalAlignment="Top"
+                                                    Height="75"
+                                                    CornerRadius="5"
+                                                    Background="#121318"
+                                                    Margin="0,10,5,10">
+                                        <Grid DataContext="{Binding Product}">
+                                            <TextBlock Text="{Binding Name}"
+                                                 VerticalAlignment="Top"
+                                                 HorizontalAlignment="Left"
+                                                 Margin="20,10,0,0"
+                                                 Foreground="White" 
+                                                 FontSize="14"
+                                                 FontFamily="/Fonts/#Inter SemiBold"
+                                                 FontWeight="Bold"/>
+                                            <Border Background="{Binding Category}"
+                                            VerticalAlignment="Top"
+                                            HorizontalAlignment="Right"
+                                            Width="10" Height="10"
+                                            CornerRadius="10"
+                                            Margin="0,10,20,0"/>
+                                            <StackPanel Orientation="Horizontal"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Left"
+                                            Margin="20,0,0,10">
+                                                <Border BorderBrush="#242328"
+                                            BorderThickness="1"
+                                            CornerRadius="3">
+                                                    <TextBlock Text="{Binding Price,StringFormat={}{0:F2}€}"
+                                                   Margin="10,4,10,4"
+                                                   Foreground="White"
+                                                   FontSize="12"
+                                                   FontFamily="/Fonts/#Inter SemiBold"
+                                                   FontWeight="Bold"/>
+                                                </Border>
+                                                <Border BorderBrush="#242328"
+                                                    BorderThickness="1"
+                                                    CornerRadius="3"
+                                                    Width="25"
+                                                    Margin="10,0,10,0">
+                                                    <controls:BetterButton Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=DataContext}"
+                                                                       DefaultForeground="White"
+                                                                       ForegroundHover="#fa9805"
+                                                                       ForegroundPress="DarkOrange"
+                                                                       Style="{StaticResource BetterButton}">
+                                                        <controls:BetterButton.Content>
+                                                            <fa:IconBlock Icon="TrashCan"
+                                                                      FontSize="14"/>
+                                                        </controls:BetterButton.Content>
+                                                    </controls:BetterButton>
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Opacity" Value="0"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding ElementName=ProductMainGrid, Path=IsMouseOver}" Value="True">
+                                                                    <DataTrigger.EnterActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                             To="1"
+                                                                             Duration="0:0:0.3"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </DataTrigger.EnterActions>
+                                                                    <DataTrigger.ExitActions>
+                                                                        <BeginStoryboard>
+                                                                            <Storyboard>
+                                                                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                                             To="0"
+                                                                             Duration="0:0:0.1"
+                                                                             EasingFunction="{StaticResource SineFunction}"/>
+                                                                            </Storyboard>
+                                                                        </BeginStoryboard>
+                                                                    </DataTrigger.ExitActions>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                </Border>
+                                            </StackPanel>
+                                            <Border Width="30" Height="30"
+                                            VerticalAlignment="Bottom"
+                                            HorizontalAlignment="Right"
+                                            Margin="0,0,20,10"
+                                            RenderOptions.BitmapScalingMode="Fant">
+                                                <Border.Background>
+                                                    <ImageBrush ImageSource="{Binding ImagePath}"
+                                                        Stretch="UniformToFill"/>
+                                                </Border.Background>
+                                            </Border>
+                                            <Grid VerticalAlignment="Top"
+                                                  HorizontalAlignment="Left"
+                                                  Opacity="0"
+                                                  Margin="20,40,0,0">
+                                                <StackPanel Orientation="Vertical">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <fa:IconBlock Icon="WeightHanging"
+                                                              Foreground="White"/>
+                                                        <TextBlock Text="Weight"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="White"
+                                                           FontFamily="/Fonts/#Inter SemiBold"/>
+                                                        <TextBlock Text="{Binding Weight, StringFormat={} {0}kg}"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="Gray"
+                                                           FontFamily="/Fonts/#Inter Bold"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal"
+                                                        Margin="0,10,0,0">
+                                                        <fa:IconBlock Icon="Ruler"
+                                                              Foreground="White"/>
+                                                        <TextBlock Text="Size"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="White"
+                                                           FontFamily="/Fonts/#Inter SemiBold"/>
+                                                        <TextBlock Text="{Binding Size, StringFormat={} {0}m³}"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="Gray"
+                                                           FontFamily="/Fonts/#Inter Bold"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal"
+                                                        Margin="0,10,0,0">
+                                                        <fa:IconBlock Icon="Location"
+                                                              Foreground="White"/>
+                                                        <TextBlock Text="Location"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="White"
+                                                           FontFamily="/Fonts/#Inter SemiBold"/>
+                                                        <TextBlock Text="{Binding Location}"
+                                                           Margin="5,0,0,0"
+                                                           Foreground="Gray"
+                                                           FontFamily="/Fonts/#Inter Bold"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                                <Grid.Style>
+                                                    <Style TargetType="Grid">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding ElementName=StoragePlaceProductGrid, Path=IsMouseOver}" Value="True">
                                                                 <DataTrigger.EnterActions>
                                                                     <BeginStoryboard>
                                                                         <Storyboard>
@@ -332,351 +676,43 @@
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </Border.Style>
-                                            </Border>
-                                        </StackPanel>
-                                        <Border Width="30" Height="30"
-                                            VerticalAlignment="Bottom"
-                                            HorizontalAlignment="Right"
-                                            Margin="0,0,20,10"
-                                            RenderOptions.BitmapScalingMode="Fant">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{Binding ImagePath}"
-                                                        Stretch="UniformToFill"/>
-                                            </Border.Background>
-                                        </Border>
-                                        <Grid VerticalAlignment="Top"
-                                          HorizontalAlignment="Left"
-                                          Opacity="0"
-                                          Margin="20,40,0,0">
-                                            <StackPanel Orientation="Vertical">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <fa:IconBlock Icon="WeightHanging"
-                                                              Foreground="White"/>
-                                                    <TextBlock Text="Weight"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="White"
-                                                           FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Weight, StringFormat={} {0}kg}"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="Gray"
-                                                           FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal"
-                                                        Margin="0,10,0,0">
-                                                    <fa:IconBlock Icon="Ruler"
-                                                              Foreground="White"/>
-                                                    <TextBlock Text="Size"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="White"
-                                                           FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Size, StringFormat={} {0}m³}"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="Gray"
-                                                           FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal"
-                                                        Margin="0,10,0,0">
-                                                    <fa:IconBlock Icon="Location"
-                                                              Foreground="White"/>
-                                                    <TextBlock Text="Location"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="White"
-                                                           FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Location}"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="Gray"
-                                                           FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                            <Grid.Style>
-                                                <Style TargetType="Grid">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ElementName=ProductMainGrid, Path=IsMouseOver}" Value="True">
-                                                            <DataTrigger.EnterActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                             To="1"
-                                                                             Duration="0:0:0.3"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.EnterActions>
-                                                            <DataTrigger.ExitActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                             To="0"
-                                                                             Duration="0:0:0.1"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.ExitActions>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Grid.Style>
+                                                </Grid.Style>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Trigger.EnterActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Storyboard.TargetProperty="Height"
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Trigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Height"
                                                                              To="160"
                                                                              Duration="0:0:0.3"
                                                                              EasingFunction="{StaticResource SineFunction}"/>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </Trigger.EnterActions>
-                                                    <Trigger.ExitActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Storyboard.TargetProperty="Height"
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.EnterActions>
+                                                        <Trigger.ExitActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+                                                                    <DoubleAnimation Storyboard.TargetProperty="Height"
                                                                              To="75"
                                                                              Duration="0:0:0.3"
                                                                              EasingFunction="{StaticResource SineFunction}"/>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </Trigger.ExitActions>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                </ItemsControl>
-                <TextBlock Text="Products"
-                               Foreground="White"
-                               FontFamily="/Fonts/#Inter SemiBold"
-                               FontSize="15"
-                               Margin="0,10"/>
-                <ItemsControl>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel HorizontalAlignment="Left"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Border Width="180"
-                                    VerticalAlignment="Top"
-                                    Height="75"
-                                    CornerRadius="5"
-                                    Background="#121318"
-                                    Margin="0,10,5,10">
-                                    <Grid>
-                                        <TextBlock Text="{Binding Name}"
-                                                 VerticalAlignment="Top"
-                                                 HorizontalAlignment="Left"
-                                                 Margin="20,10,0,0"
-                                                 Foreground="White" 
-                                                 FontSize="14"
-                                                 FontFamily="/Fonts/#Inter SemiBold"
-                                                 FontWeight="Bold"/>
-                                        <Border Background="{Binding Category}"
-                                            VerticalAlignment="Top"
-                                            HorizontalAlignment="Right"
-                                            Width="10" Height="10"
-                                            CornerRadius="10"
-                                            Margin="0,10,20,0"/>
-                                        <StackPanel Orientation="Horizontal"
-                                            VerticalAlignment="Bottom"
-                                            HorizontalAlignment="Left"
-                                            Margin="20,0,0,10">
-                                            <Border BorderBrush="#242328"
-                                            BorderThickness="1"
-                                            CornerRadius="3">
-                                                <TextBlock Text="{Binding Price,StringFormat={}{0:F2}€}"
-                                                   Margin="10,4,10,4"
-                                                   Foreground="White"
-                                                   FontSize="12"
-                                                   FontFamily="/Fonts/#Inter SemiBold"
-                                                   FontWeight="Bold"/>
-                                            </Border>
-                                            <Border BorderBrush="#242328"
-                                                    BorderThickness="1"
-                                                    CornerRadius="3"
-                                                    Width="25"
-                                                    Margin="10,0,10,0">
-                                                <controls:BetterButton Command="{Binding DataContext.DeleteProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=DataContext}"
-                                                                       DefaultForeground="White"
-                                                                       ForegroundHover="#fa9805"
-                                                                       ForegroundPress="DarkOrange"
-                                                                       Style="{StaticResource BetterButton}">
-                                                    <controls:BetterButton.Content>
-                                                        <fa:IconBlock Icon="TrashCan"
-                                                                      FontSize="14"/>
-                                                    </controls:BetterButton.Content>
-                                                </controls:BetterButton>
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Setter Property="Opacity" Value="0"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ElementName=ProductMainGrid, Path=IsMouseOver}" Value="True">
-                                                                <DataTrigger.EnterActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                             To="1"
-                                                                             Duration="0:0:0.3"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </DataTrigger.EnterActions>
-                                                                <DataTrigger.ExitActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                             To="0"
-                                                                             Duration="0:0:0.1"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </DataTrigger.ExitActions>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                            </Border>
-                                        </StackPanel>
-                                        <Border Width="30" Height="30"
-                                            VerticalAlignment="Bottom"
-                                            HorizontalAlignment="Right"
-                                            Margin="0,0,20,10"
-                                            RenderOptions.BitmapScalingMode="Fant">
-                                            <Border.Background>
-                                                <ImageBrush ImageSource="{Binding ImagePath}"
-                                                        Stretch="UniformToFill"/>
-                                            </Border.Background>
-                                        </Border>
-                                        <Grid VerticalAlignment="Top"
-                                          HorizontalAlignment="Left"
-                                          Opacity="0"
-                                          Margin="20,40,0,0">
-                                            <StackPanel Orientation="Vertical">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <fa:IconBlock Icon="WeightHanging"
-                                                              Foreground="White"/>
-                                                    <TextBlock Text="Weight"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="White"
-                                                           FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Weight, StringFormat={} {0}kg}"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="Gray"
-                                                           FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal"
-                                                        Margin="0,10,0,0">
-                                                    <fa:IconBlock Icon="Ruler"
-                                                              Foreground="White"/>
-                                                    <TextBlock Text="Size"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="White"
-                                                           FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Size, StringFormat={} {0}m³}"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="Gray"
-                                                           FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal"
-                                                        Margin="0,10,0,0">
-                                                    <fa:IconBlock Icon="Location"
-                                                              Foreground="White"/>
-                                                    <TextBlock Text="Location"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="White"
-                                                           FontFamily="/Fonts/#Inter SemiBold"/>
-                                                    <TextBlock Text="{Binding Location}"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="Gray"
-                                                           FontFamily="/Fonts/#Inter Bold"/>
-                                                </StackPanel>
-                                            </StackPanel>
-                                            <Grid.Style>
-                                                <Style TargetType="Grid">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ElementName=ProductMainGrid, Path=IsMouseOver}" Value="True">
-                                                            <DataTrigger.EnterActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                             To="1"
-                                                                             Duration="0:0:0.3"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.EnterActions>
-                                                            <DataTrigger.ExitActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                                                             To="0"
-                                                                             Duration="0:0:0.1"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </DataTrigger.ExitActions>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Grid.Style>
-                                        </Grid>
-                                    </Grid>
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Trigger.EnterActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Storyboard.TargetProperty="Height"
-                                                                             To="160"
-                                                                             Duration="0:0:0.3"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </Trigger.EnterActions>
-                                                    <Trigger.ExitActions>
-                                                        <BeginStoryboard>
-                                                            <Storyboard>
-                                                                <DoubleAnimation Storyboard.TargetProperty="Height"
-                                                                             To="75"
-                                                                             Duration="0:0:0.3"
-                                                                             EasingFunction="{StaticResource SineFunction}"/>
-                                                            </Storyboard>
-                                                        </BeginStoryboard>
-                                                    </Trigger.ExitActions>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                    <system:String>#1</system:String>
-                </ItemsControl>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.ExitActions>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>
