@@ -19,7 +19,7 @@ namespace UITest.Model
 
         public SolidColorBrush Category { get; } = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF6969"));
 
-        public string ImagePath { get; } = @"D:\Leon\source\repos\UITest\UITest\Images\Icons\";
+        public string ImagePath { get; }
 
         public Product(string name, float price, float weight, float size, string imagePath = "", string location = "Unknown", SolidColorBrush category = null)
         {

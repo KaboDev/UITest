@@ -252,7 +252,7 @@
     <Border Width="{Binding PopupWidth}"
             CornerRadius="5"
             Background="#121318"
-            Margin="10,10,5,10"
+            Margin="0,10,5,10"
             UseLayoutRounding="True">
         <Grid>
             <Grid.RowDefinitions>
@@ -260,7 +260,7 @@
                 <RowDefinition/>
                 <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Product"
+            <TextBlock Text="{Binding Title}"
                        HorizontalAlignment="Center"
                        Foreground="White"
                        Margin="0,12.5,0,0"
@@ -310,7 +310,7 @@
             </Grid>
             <Grid Grid.Row="2">
                 <Grid VerticalAlignment="Center"
-                      Margin="20,0,20,0">
+                      Margin="10,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>

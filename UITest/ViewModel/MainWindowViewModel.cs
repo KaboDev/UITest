@@ -40,7 +40,7 @@ namespace UITest.ViewModel
                 CurrentView = _storageVM;
             });
 
-            CurrentView = _productVM;
+            CurrentView = _storageVM;
         }
     }
 }

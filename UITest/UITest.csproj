@@ -83,13 +83,13 @@
     </ApplicationDefinition>
     <Compile Include="Converter\ImageSourceToVisibilityConverter.cs" />
     <Compile Include="Converter\IsLastItemConverter.cs" />
-    <Compile Include="Converter\ItemCountToVisibilityConverter.cs" />
+    <Compile Include="Converter\MultiVisibilityConverter.cs" />
     <Compile Include="Converter\ProgressToColorConverter.cs" />
+    <Compile Include="Core\CustomExtensions.cs" />
     <Compile Include="Core\CustomPopup.cs" />
     <Compile Include="Core\ElementTemplateSelector.cs" />
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
-    <Compile Include="Core\TypeParseExtension.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\Storage.cs" />
     <Compile Include="Model\StoragePlace.cs" />
@@ -198,6 +198,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Icons\Strawberry.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Shelf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Drawer.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

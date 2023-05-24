@@ -10,13 +10,22 @@ namespace UITest.Model
     {
         public string Name { get; }
         public string Location { get; }
+        public float Weight { get; }
+        public float Size { get; }
+        public float MaximumWeight { get; }
+        public float MaximumSize { get; }
+
+        public string ImagePath { get; }
 
         public List<StoragePlaceProduct> StoragePlaceProducts { get; }
 
-        public StoragePlace(string name, string location)
+        public StoragePlace(string name, string location, float maxWeight, float maxSize, string imagePath = "")
         {
             Name = name;
             Location = location;
+            MaximumWeight = maxWeight;
+            MaximumSize = maxSize;
+            ImagePath = imagePath;
 
             StoragePlaceProducts = new List<StoragePlaceProduct>();
         }

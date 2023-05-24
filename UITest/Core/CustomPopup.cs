@@ -21,7 +21,8 @@ namespace UITest.Core
     {
         Input,
         Selection,
-        Image
+        Image,
+        Dropdown
     }
 
     class CustomPopup
@@ -81,7 +82,7 @@ namespace UITest.Core
                 }
 
                 //Checks if input is correct type 
-                if (!TypeParseExtension.IsParsePossible(Input,InputType))
+                if (!CustomExtensions.IsParsePossible(Input,InputType))
                 {
                     result = errorMessage;
                 }
