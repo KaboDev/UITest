@@ -63,10 +63,10 @@ namespace UITest.ViewModel
                 Title = "Product",
                 Elements = new List<Element>()
                 {
-                    new Element("Label", new InputElement(typeof(string),@"^[a-zA-Z]+$", "Input can only contain letters")),
-                    new Element("Price", new InputElement(typeof(float),@"^(?!.*[.,].*[.,])[^\n]*$", "X.XX €")),
-                    new Element("Weight", new InputElement(typeof(float), @"^(?!.*[.,].*[.,])[^\n]*$", "X.XX kg")),
-                    new Element("Size", new InputElement(typeof(float),@"^(?!.*[.,].*[.,])[^\n]*$","X.XX m³")),
+                    new Element("Label", new InputElement(typeof(string),"Label...",@"^[a-zA-Z]+$", "Input can only contain letters")),
+                    new Element("Price", new InputElement(typeof(float), "Price in €",@"^(?!.*[.,].*[.,])[^\n]*$", "X.XX €")),
+                    new Element("Weight", new InputElement(typeof(float), "Weight in kg", @"^(?!.*[.,].*[.,])[^\n]*$", "X.XX kg")),
+                    new Element("Size", new InputElement(typeof(float), "Size in cm³",@"^(?!.*[.,].*[.,])[^\n]*$","X.XX m³")),
                     new Element("Category", new SelectionElement(new List<object>()
                         {
                             new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF6969")),
@@ -78,7 +78,7 @@ namespace UITest.ViewModel
                         })
                     ),
                     new Element("Icon", new ImageElement()),
-                    new Element("Location", new InputElement(typeof(string),@"^[a-zA-Z]+$","Input can only contain letters")),
+                    new Element("Location", new InputElement(typeof(string),"Location...",@"^[a-zA-Z]+$","Input can only contain letters")),
                 }
             };
             PopupBaseViewModel popupVM = new PopupBaseViewModel(popup);

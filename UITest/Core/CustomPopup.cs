@@ -234,7 +234,7 @@ namespace UITest.Core
             // Check if the URL is a valid image URL
             if (Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
             {
-                string fileName = url.Substring(url.LastIndexOf("/"));
+                string fileName = url.Substring(url.LastIndexOf("/"), url.IndexOf("?") - url.LastIndexOf("/"));
                 string downloadURL = url.Substring(0, url.LastIndexOf('/')) + "/download/png/512";
 
                 // Download and save the image
