@@ -14,6 +14,9 @@ using System.Text;
 using System.Net;
 using System.Threading.Tasks;
 using Color = System.Drawing.Color;
+using UITest.Model;
+using UITest.View;
+using UITest.ViewModel;
 
 namespace UITest.Core
 {
@@ -44,13 +47,24 @@ namespace UITest.Core
     }
     class InputElement : DefaultElementData, IDataErrorInfo
     {
-        private string _input = "";
+        private string _input;
         public string Input
         {
             get { return _input; }
             set
             {
                 _input = value;
+            }
+        }
+
+        private string _temporaryText;
+        public string TemporaryText
+        {
+            get { return _temporaryText; }
+            set
+            {
+                _temporaryText = value;
+                OnPropertyChanged();
             }
         }
 
@@ -65,34 +79,38 @@ namespace UITest.Core
             get
             {
                 string result = null;
-
-                if (string.IsNullOrEmpty(Input)) return result;
-
                 string errorMessage = null;
 
-                switch (Type.GetTypeCode(InputType))
+                if (string.IsNullOrEmpty(Input))
                 {
-                    case TypeCode.Int32:
-                        errorMessage = "Input has to be a number with no decimal places";
-                        break;
-                    case TypeCode.Single:
-                        Input = Input.Replace('.', ',');
-                        errorMessage = "Input has to be a number with decimal places";
-                        break;
+                    result = "Input can not be empty";
                 }
-
-                //Checks if input is correct type 
-                if (!CustomExtensions.IsParsePossible(Input,InputType))
+                else
                 {
-                    result = errorMessage;
-                }
-
-                if (!string.IsNullOrEmpty(InputPattern))
-                {
-                    Input = Regex.Replace(Input, @"\s", "");
-                    if (!Regex.IsMatch(Input, InputPattern))
+                    switch (Type.GetTypeCode(InputType))
                     {
-                        result = VisualRegexTooltip;
+                        case TypeCode.Int32:
+                            errorMessage = "Input has to be a number with no decimal places";
+                            break;
+                        case TypeCode.Single:
+                            Input = Input.Replace('.', ',');
+                            errorMessage = "Input has to be a number with decimal places";
+                            break;
+                    }
+
+                    //Checks if input is correct type 
+                    if (!CustomExtensions.IsParsePossible(Input, InputType))
+                    {
+                        result = errorMessage;
+                    }
+
+                    if (!string.IsNullOrEmpty(InputPattern))
+                    {
+                        Input = Regex.Replace(Input, @"\s", "");
+                        if (!Regex.IsMatch(Input, InputPattern))
+                        {
+                            result = VisualRegexTooltip;
+                        }
                     }
                 }
 
@@ -107,8 +125,9 @@ namespace UITest.Core
         #endregion
 
         #region Constructors
-        public InputElement(Type inputType, string inputPattern = "", string visualRegexTooltip = "")
+        public InputElement(Type inputType, string tempTxt = "", string inputPattern = "", string visualRegexTooltip = "")
         {
+            TemporaryText = tempTxt;
             InputType = inputType;
             InputPattern = inputPattern;
             VisualRegexTooltip = visualRegexTooltip;
@@ -177,7 +196,7 @@ namespace UITest.Core
                 OpenFileDialog openFileDialog = new OpenFileDialog();
 
                 openFileDialog.DefaultExt = ".png";
-                openFileDialog.InitialDirectory = "D:\\Leon\\source\\repos\\UITest\\UITest\\Images\\Icons\\";
+                openFileDialog.InitialDirectory = @"C:\Users\Leon\source\repos\KaboDev\UITest\UITest\Images\Icons\";
                 openFileDialog.Filter = "PNG Files *.png|*.png|JPEG Files (*.jpg, *.jpeg)|*.jpg;*.jpeg";
 
                 if (openFileDialog.ShowDialog() == true)
@@ -230,7 +249,7 @@ namespace UITest.Core
                 try
                 {
                     byte[] imageData = await client.DownloadDataTaskAsync(url);
-                    string savePath = $@"D:\Leon\source\repos\UITest\UITest\Images\Icons\{fileName}.png"; // You can customize the file name and extension as needed
+                    string savePath = $@"C:\Users\Leon\source\repos\KaboDev\UITest\UITest\Images\Icons\{fileName}.png"; // You can customize the file name and extension as needed
 
                     using (MemoryStream memoryStream = new MemoryStream(imageData))
                     {
@@ -238,7 +257,7 @@ namespace UITest.Core
                         {
                             using (Bitmap bitmap = new Bitmap(image))
                             {
-                                // Iterate through each pixel of the bitmap and set it to white
+                                // Iterate through each pixel of the bitmap and set it to white (because black on dark colors = ugly)
                                 for (int x = 0; x < bitmap.Width; x++)
                                 {
                                     for (int y = 0; y < bitmap.Height; y++)
@@ -250,7 +269,7 @@ namespace UITest.Core
                                 }
 
                                 // Save the modified bitmap to the specified file path
-                                bitmap.Save(savePath,ImageFormat.Png);
+                                bitmap.Save(savePath, ImageFormat.Png);
                             }
                         }
                     }
@@ -262,6 +281,31 @@ namespace UITest.Core
                     MessageBox.Show("Error occurred while processing the image: " + ex, "Error");
                 }
             }
+        }
+    }
+
+    class DropdownElement : DefaultElementData
+    {
+        public Product CurrentProduct { get; set; }
+
+        private ObservableCollection<Product> _availableProducts;
+        public ObservableCollection<Product> AvailableProducts
+        {
+            get
+            {
+                return _availableProducts;
+            }
+            set
+            {
+                _availableProducts = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public DropdownElement()
+        {
+            AvailableProducts = new ObservableCollection<Product>();
+            AvailableProducts = ProductViewModel.Products;
         }
     }
 

@@ -47,10 +47,10 @@ namespace UITest.ViewModel
 
             Products = new ObservableCollection<Product>()
             {
-                new Product("Banana", 0.1f, 0.4f,5, @"D:\Leon\source\repos\UITest\UITest\Images\Icons\Banana.png", "South Africa", previewCategory),
-                new Product("Apple", 0.2f, 0.2f,6, @"D:\Leon\source\repos\UITest\UITest\Images\Icons\Apple.png", "Germany", previewCategory),
-                new Product("Pear", 0.25f, 0.5f,3, @"D:\Leon\source\repos\UITest\UITest\Images\Icons\Pear.png", "Russia", previewCategory),
-                new Product("Strawberry", 0.25f, 0.5f,3, @"D:\Leon\source\repos\UITest\UITest\Images\Icons\Strawberry.png", "Germany", previewCategory),
+                new Product("Banana", 0.1f, 0.4f,5, @"C:\Users\Leon\source\repos\KaboDev\UITest\UITest\Images\Icons\Banana.png", "South Africa", previewCategory),
+                new Product("Apple", 0.2f, 0.2f,6, @"C:\Users\Leon\source\repos\KaboDev\UITest\UITest\Images\Icons\Apple.png", "Germany", previewCategory),
+                new Product("Pear", 0.25f, 0.5f,3, @"C:\Users\Leon\source\repos\KaboDev\UITest\UITest\Images\Icons\Pear.png", "Russia", previewCategory),
+                new Product("Strawberry", 0.25f, 0.5f,3, @"C:\Users\Leon\source\repos\KaboDev\UITest\UITest\Images\Icons\Strawberry.png", "Germany", previewCategory),
             };
 
             Popups = new ObservableCollection<PopupBaseViewModel>();

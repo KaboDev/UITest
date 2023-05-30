@@ -16,23 +16,13 @@ using System.Windows.Shapes;
 namespace UITest.View
 {
     /// <summary>
-    /// Interaction logic for StorageView.xaml
+    /// Interaction logic for HistoryView.xaml
     /// </summary>
-    public partial class StorageView : UserControl
+    public partial class HistoryView : UserControl
     {
-        public StorageView()
+        public HistoryView()
         {
             InitializeComponent();
-        }
-
-        private void BetterButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void BetterButton_Click_1(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

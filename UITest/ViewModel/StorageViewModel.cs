@@ -43,8 +43,6 @@ namespace UITest.ViewModel
 
         #region Lists
         public ObservableCollection<Storage> Storages { get; private set; } = new ObservableCollection<Storage>();
-        public ObservableCollection<StoragePlace> CurrentStoragePlaces { get; private set; } = new ObservableCollection<StoragePlace>();
-        public ObservableCollection<StoragePlaceProduct> CurrentStoragePlaceProducts { get; private set; } = new ObservableCollection<StoragePlaceProduct>();
 
         public ObservableCollection<PopupBaseViewModel> StoragePopups { get; private set; } = new ObservableCollection<PopupBaseViewModel>();
         public ObservableCollection<PopupBaseViewModel> StoragePlacePopups { get; private set; } = new ObservableCollection<PopupBaseViewModel>();
@@ -55,85 +53,75 @@ namespace UITest.ViewModel
         {
             DeleteCommand = new RelayCommand(o =>
             {
-                if (o is Storage storage)
-                {
-                    if (CurrentStorage == storage)
-                    {
-                        CurrentStoragePlaceProducts.Clear();
-                        CurrentStoragePlaces.Clear();
-                    }
-                    Storages.Remove(storage);
-                }
+                Type classType = o.GetType();
 
-                if (o is StoragePlace storagePlace)
+                CheckClassType(classType, typeof(Storage), () =>
                 {
-                    if (CurrentStoragePlace == storagePlace)
-                    {
-                        CurrentStoragePlaceProducts.Clear();
-                    }
-                    CurrentStoragePlaces.Remove(storagePlace);
-                }
+                    ClearSelection();
 
-                if (o is StoragePlaceProduct storagePlaceProduct)
+                    CurrentStorage = null;
+                    Storages.Remove(o as Storage);
+                });
+                CheckClassType(classType, typeof(StoragePlace), () =>
                 {
-                    CurrentStoragePlaceProducts.Remove(storagePlaceProduct);
-                }
+                    ClearSelection();
+
+                    CurrentStorage.StoragePlaces.Remove(o as StoragePlace);
+                });
+                CheckClassType(classType, typeof(StoragePlaceProduct), () =>
+                {
+                    CurrentStoragePlace.StoragePlaceProducts.Remove(o as StoragePlaceProduct);
+                });
             });
             SelectCommand = new RelayCommand(o =>
             {
-                //Checks if Storage is selected
-                if (o is Storage storage)
-                {
-                    if (_currentStorage != storage)
-                    {
-                        CurrentStorage = storage;
-                        CurrentStoragePlaces.Clear();
-                        CurrentStoragePlaceProducts.Clear();
-                        //Added through the foreach (instead of setting directly) so the property raises change notifications -> needed (e.g. converter)
-                        (o as Storage).StoragePlaces.ForEach(x => CurrentStoragePlaces.Add(x));
-                    }
-                }
+                Type classType = o.GetType();
 
-                //Checks if StoragePlace is selected
-                if (o is StoragePlace storagePlace)
+                CheckClassType(classType, typeof(Storage), () =>
                 {
-                    if (_currentStoragePlace != storagePlace)
+                    if (o != CurrentStorage)
                     {
-                        CurrentStoragePlace = storagePlace;
-                        CurrentStoragePlaceProducts.Clear();
-                        //Added through the foreach (instead of setting directly) so the property raises change notifications -> needed (e.g. converter)
-                        (o as StoragePlace).StoragePlaceProducts.ForEach(x => CurrentStoragePlaceProducts.Add(x));
+                        ClearSelection();
+                        CurrentStorage = o as Storage;
                     }
-                }
+                });
+                CheckClassType(classType, typeof(StoragePlace), () =>
+                {
+                    if (o != CurrentStoragePlace)
+                    {
+                        ClearSelection();
+                        CurrentStoragePlace = o as StoragePlace;
+                    }
+                });
             });
             AddCommand = new RelayCommand(o =>
             {
                 Type classType = o as Type;
+                ObservableCollection<object> popupList = new ObservableCollection<object>();
 
                 if (classType != null)
                 {
                     CheckClassType(classType, typeof(Storage), () =>
                     {
-                        popupList = new ObservableCollection(StoragePopups;
+                        StoragePopups.Add(CreatePopup(classType, ref popupList));
                     });
 
                     CheckClassType(classType, typeof(StoragePlace), () =>
                     {
-                        popupList = StoragePlacePopups;
+                        StoragePlacePopups.Add(CreatePopup(classType, ref popupList));
                     });
 
                     CheckClassType(classType, typeof(StoragePlaceProduct), () =>
                     {
-                        popupList = StoragePlaceProductPopups;
+                        StoragePlaceProductPopups.Add(CreatePopup(classType, ref popupList));
                     });
                 }
-                CreatePopup(classType, ref popupList);
             });
 
-            Storage mainStorage = new Storage("Hauptlager", "Germany", 1000.0f);
+            Storage mainStorage = new Storage("Hauptlager", "Germany", 200);
 
-            StoragePlace shelf = new StoragePlace("Shelf", "A1B3", 10000, 3, @"D:\Leon\source\repos\UITest\UITest\Images\Icons\Shelf.png");
-            StoragePlace chest = new StoragePlace("Drawer", "A2B2", 20, 1, @"D:\Leon\source\repos\UITest\UITest\Images\Icons\Drawer.png");
+            StoragePlace shelf = new StoragePlace("Shelf", "A1B3", 50, 3, @"C:\Users\Leon\source\repos\KaboDev\UITest\UITest\Images\Icons\Shelf.png");
+            StoragePlace chest = new StoragePlace("Drawer", "A2B2", 20, 1, @"C:\Users\Leon\source\repos\KaboDev\UITest\UITest\Images\Icons\Drawer.png");
 
             StoragePlaceProduct apple = new StoragePlaceProduct(ProductViewModel.Products.FirstOrDefault(x => x.Name == "Apple"), 2);
             StoragePlaceProduct pear = new StoragePlaceProduct(ProductViewModel.Products.FirstOrDefault(x => x.Name == "Pear"), 4);
@@ -149,14 +137,9 @@ namespace UITest.ViewModel
             mainStorage.AddStoragePlace(chest);
 
             Storages.Add(mainStorage);
-            Storages.Add(new Storage("Nebenlager 1", "USA", 2000f));
-            Storages.Add(new Storage("Nebenlager 2", "USA", 2000f));
-            Storages.Add(new Storage("Nebenlager 3", "USA", 2000f));
-            Storages.Add(new Storage("Nebenlager 4", "USA", 2000f));
-            Storages.Add(new Storage("Nebenlager 5", "USA", 2000f));
         }
 
-        private void CreatePopup(Type classType, ref ObservableCollection<object> popupList)
+        private PopupBaseViewModel CreatePopup(Type classType, ref ObservableCollection<object> popupList)
         {
             CustomPopup popup = CreatePopupData(classType);
             PopupBaseViewModel popupVM = new PopupBaseViewModel(popup);
@@ -164,12 +147,14 @@ namespace UITest.ViewModel
             Action<List<Element>> PopupAction = null;
             PopupAction = (list) =>
             {
-                AddNewItem(list, classType, popupVM);
-                popupVM.PopupClosed -= PopupAction;
+                if (AddNewItem(list, classType, popupVM))
+                {
+                    popupVM.PopupClosed -= PopupAction;
+                }
             };
             popupVM.PopupClosed += PopupAction;
 
-            popupList.Add(popupVM);
+            return popupVM;
         }
 
         private CustomPopup CreatePopupData(Type classType)
@@ -183,9 +168,9 @@ namespace UITest.ViewModel
                     Title = "Storage",
                     Elements = new List<Element>()
                     {
-                    new Element("Label", new InputElement(typeof(string),@"^[a-zA-Z]+$", "Input can only contain letters")),
-                    new Element("Location", new InputElement(typeof(string),@"^[a-zA-Z]+$", "Input can only contain letters")),
-                    new Element("Size", new InputElement(typeof(float),@"^(?!.*[.,].*[.,])[^\n]*$", "X.XX m²")),
+                    new Element("Label", new InputElement(typeof(string), "Name...",@"^[a-zA-Z]+$", "Input can only contain letters")),
+                    new Element("Location", new InputElement(typeof(string),"Location...",@"^[a-zA-Z]+$", "Input can only contain letters")),
+                    new Element("Size", new InputElement(typeof(float), "Size in m²",@"^(?!.*[.,].*[.,])[^\n]*$", "X.XX m²")),
                     }
                 };
             });
@@ -196,9 +181,11 @@ namespace UITest.ViewModel
                     Title = "Storage Place",
                     Elements = new List<Element>()
                     {
-                    new Element("Label", new InputElement(typeof(string),@"^[a-zA-Z]+$", "Input can only contain letters")),
-                    new Element("Location", new InputElement(typeof(string),@"^[a-zA-Z]+$", "Input can only contain letters")),
-                    new Element("Size", new InputElement(typeof(float),@"^(?!.*[.,].*[.,])[^\n]*$", "X.XX m²")),
+                    new Element("Label", new InputElement(typeof(string), "Name...",@"^[a-zA-Z]+$", "Input can only contain letters")),
+                    new Element("Location", new InputElement(typeof(string),"Location...")),
+                    new Element("Size", new InputElement(typeof(float),"Size in m³",@"^(?!.*[.,].*[.,])[^\n]*$", "X.XX m³")),
+                    new Element("Weight", new InputElement(typeof(float),"Weight in kg",@"^(?!.*[.,].*[.,])[^\n]*$", "X.XX kg")),
+                    new Element("Image", new ImageElement()),
                     }
                 };
             });
@@ -209,9 +196,8 @@ namespace UITest.ViewModel
                     Title = "Product",
                     Elements = new List<Element>()
                     {
-                    new Element("Label", new InputElement(typeof(string),@"^[a-zA-Z]+$", "Input can only contain letters")),
-                    new Element("Location", new InputElement(typeof(string),@"^[a-zA-Z]+$", "Input can only contain letters")),
-                    new Element("Size", new InputElement(typeof(float),@"^(?!.*[.,].*[.,])[^\n]*$", "X.XX m²")),
+                    new Element("Product", new DropdownElement()),
+                    new Element("Amount", new InputElement(typeof(int), "1...",@"^[1-9]\d*$", "Input has to be a number greater than 0")),
                     }
                 };
             });
@@ -219,8 +205,10 @@ namespace UITest.ViewModel
             return popup;
         }
 
-        private void AddNewItem(List<Element> items, Type classType, PopupBaseViewModel popupVM)
+        private bool AddNewItem(List<Element> items, Type classType, PopupBaseViewModel popupVM)
         {
+            bool validDeletion = true;
+
             CheckClassType(classType, typeof(Storage), () =>
             {
                 Storage storage = new Storage
@@ -231,6 +219,7 @@ namespace UITest.ViewModel
                 );
 
                 Storages.Add(storage);
+                StoragePopups.Remove(popupVM);
             });
 
             CheckClassType(classType, typeof(StoragePlace), () =>
@@ -244,10 +233,11 @@ namespace UITest.ViewModel
                     CustomExtensions.SearchElement<string>(items, "Image", Elements.Image)
                 );
 
-                CurrentStoragePlaces.Add(storagePlace);
+                CurrentStorage.AddStoragePlace(storagePlace);
+                StoragePlacePopups.Remove(popupVM);
             });
 
-            CheckClassType(classType, typeof(StoragePlace), () =>
+            CheckClassType(classType, typeof(StoragePlaceProduct), () =>
             {
                 StoragePlaceProduct storagePlaceProduct = new StoragePlaceProduct
                 (
@@ -255,13 +245,17 @@ namespace UITest.ViewModel
                     CustomExtensions.SearchElement<int>(items, "Amount")
                 );
 
-                CurrentStoragePlaceProducts.Add(storagePlaceProduct);
+                if (storagePlaceProduct.Product != null && CurrentStoragePlace.AddStoragePlaceProduct(storagePlaceProduct))
+                {
+                    StoragePlaceProductPopups.Remove(popupVM);
+                }
+                else
+                {
+                    validDeletion = false;
+                }
             });
 
-            if (popupVM != null)
-            {
-                StoragePopups.Remove(popupVM);
-            }
+            return validDeletion;
         }
 
         private void CheckClassType<T>(T classType, Type targetType, Action code) where T : Type
@@ -270,6 +264,15 @@ namespace UITest.ViewModel
             {
                 code();
             }
+        }
+
+        private void ClearSelection()
+        {
+            CurrentStoragePlace = null;
+
+            StoragePopups.Clear();
+            StoragePlacePopups.Clear();
+            StoragePlaceProductPopups.Clear();
         }
     }
 }

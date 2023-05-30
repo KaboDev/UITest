@@ -13,7 +13,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:ProgressToColorConverter x:Key="ProgressToColorConverter"/>
-        <converter:MultiVisibilityConverter x:Key="MultiVisibilityConverter"/>
+        <converter:VisibilityConverter x:Key="VisibilityConverter"/>
     </UserControl.Resources>
     <Grid UseLayoutRounding="True">
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
@@ -45,7 +45,7 @@
                                                             Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl, Mode=FindAncestor}, Path=DataContext.SelectCommand}"
                                                             CommandParameter="{Binding}"
                                                             BorderHover="#99C88827"
-                                                            BorderPress="#fa9805"
+                                                            BorderPress="#B2FA9805"
                                                             Style="{StaticResource BetterRadioButton}">
                                     <controls:BetterRadioButton.Content>
                                         <Grid x:Name="StorageGrid">
@@ -126,15 +126,15 @@
                                                            FontFamily="/Fonts/#Inter SemiBold"
                                                            Foreground="#717277"
                                                            Margin="0,0,5,0"/>
-                                                            <TextBlock Text="100%"
-                                                   Width="31"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="12"
-                                                           Height="14"
-                                                           FontFamily="/Fonts/#Inter Medium"
-                                                           Foreground="White"
-                                                           Margin="0,0,5,0"/>
-                                                            <ProgressBar Minimum="0" Maximum="100" Value="30"
+                                                            <TextBlock Text="{Binding SpaceUsed, StringFormat={}{0}%}"
+                                                                       Width="31"
+                                                                       VerticalAlignment="Center"
+                                                                        FontSize="12"
+                                                                        Height="14"
+                                                                        FontFamily="/Fonts/#Inter Medium"
+                                                                        Foreground="White"
+                                                                        Margin="0,0,5,0"/>
+                                                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding SpaceUsed}"
                                                              Height="15"
                                                              Width="60"
                                                              Style="{StaticResource Progressbar}"
@@ -176,10 +176,19 @@
                                                            Margin="5,0,0,0"
                                                            Foreground="White"
                                                            FontFamily="/Fonts/#Inter SemiBold"/>
-                                                                <TextBlock Text="{Binding Size, StringFormat={} {0}m³}"
-                                                           Margin="5,0,0,0"
-                                                           Foreground="Gray"
-                                                           FontFamily="/Fonts/#Inter Bold"/>
+                                                                <Grid Margin="5,1,0,0">
+                                                                    <Viewbox Stretch="Uniform" Width="80" Height="15"
+                                                                             HorizontalAlignment="Left"
+                                                                             VerticalAlignment="Center">
+                                                                        <TextBlock Foreground="Gray"
+                                                                                   FontFamily="/Fonts/#Inter Bold">
+                                                                    <Run Text="{Binding Size, StringFormat=N2,Mode=OneWay}"/>
+                                                                    <Run Text="/"/>
+                                                                    <Run Text="{Binding MaximumSize,Mode=OneWay}"/>
+                                                                    <Run Text="m³"/>
+                                                                        </TextBlock>
+                                                                    </Viewbox>
+                                                                </Grid>
                                                             </StackPanel>
                                                         </StackPanel>
                                                         <Grid.Style>
@@ -249,7 +258,7 @@
                     </ItemsControl>
                     <controls:BetterButton Width="180" Height="65"
                                        HorizontalAlignment="Left"
-                                       Margin="0,10,0,20"
+                                       Margin="0,10,0,0"
                                        BorderThickness="2"
                                        CornerRadius="5"
                                        FontSize="27"
@@ -257,12 +266,12 @@
                                        Content="+"
                                        Background="#121318"
                                        BorderHover="#99C88827"
-                                       BorderPress="#fa9805"
+                                       BorderPress="#B2FA9805"
                                        DefaultForeground="#FFC88827"
                                        ForegroundHover="#fa9805"
                                        ForegroundPress="DarkOrange"
                                        Command="{Binding AddCommand}"
-                                       CommandParameter="{x:Type models:Storage}">
+                                       CommandParameter="{x:Type models:Storage}" Click="BetterButton_Click">
                         <controls:BetterButton.Style>
                             <Style TargetType="controls:BetterButton" BasedOn="{StaticResource BetterButton}">
                                 <Style.Triggers>
@@ -306,13 +315,8 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <StackPanel.Visibility>
-                        <MultiBinding Converter="{StaticResource MultiVisibilityConverter}">
-                            <Binding Path="CurrentStoragePlaces.Count" />
-                            <Binding Path="CurrentStorage" />
-                        </MultiBinding>
-                    </StackPanel.Visibility>
+                <StackPanel Orientation="Vertical"
+                            Visibility="{Binding Path=CurrentStorage, Converter={StaticResource VisibilityConverter}}">
                     <Border Background="#717277"
                         Height="2"
                         CornerRadius="1"
@@ -329,7 +333,7 @@
                                   FontSize="18"
                                   Margin="10,0,0,0"/>
                     </StackPanel>
-                    <ItemsControl ItemsSource="{Binding CurrentStoragePlaces}">
+                    <ItemsControl ItemsSource="{Binding CurrentStorage.StoragePlaces}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel HorizontalAlignment="Left"/>
@@ -341,7 +345,7 @@
                                                             Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl, Mode=FindAncestor}, Path=DataContext.SelectCommand}"
                                                             CommandParameter="{Binding}"
                                                             BorderHover="#99C88827"
-                                                            BorderPress="#fa9805"
+                                                            BorderPress="#B2FA9805"
                                                             Style="{StaticResource BetterRadioButton}">
                                     <controls:BetterRadioButton.Content>
                                         <Grid x:Name="StoragePlaceGrid">
@@ -420,7 +424,7 @@
                                                                 CornerRadius="3">
                                                             <StackPanel Orientation="Horizontal"
                                                                         Margin="5,0,5,0">
-                                                                <TextBlock Text="20%"
+                                                                <TextBlock Text="{Binding SpaceUsed, StringFormat={}{0}%}"
                                                                            Width="31"
                                                                            VerticalAlignment="Center"
                                                                            FontSize="12"
@@ -428,11 +432,11 @@
                                                                            FontFamily="/Fonts/#Inter Medium"
                                                                            Foreground="White"
                                                                            Margin="0,0,5,0"/>
-                                                                <ProgressBar Minimum="0" Maximum="100" Value="30"
-                                                             Height="15"
-                                                             Width="40"
-                                                             Style="{StaticResource Progressbar}"
-                                                             Background="{Binding RelativeSource={RelativeSource Self}, Path=Value, Converter={StaticResource ProgressToColorConverter}}"/>
+                                                                <ProgressBar Minimum="0" Maximum="100" Value="{Binding SpaceUsed}"
+                                                                            Height="15"
+                                                                            Width="40"
+                                                                            Style="{StaticResource Progressbar}"
+                                                                            Background="{Binding RelativeSource={RelativeSource Self}, Path=Value, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ProgressToColorConverter}}"/>
                                                             </StackPanel>
                                                         </Border>
                                                         <Border BorderBrush="#242328"
@@ -510,7 +514,7 @@
                                                                              VerticalAlignment="Center">
                                                                         <TextBlock Foreground="Gray"
                                                                                    FontFamily="/Fonts/#Inter Bold">
-                                                                    <Run Text="{Binding Weight,Mode=OneWay}"/>
+                                                                    <Run Text="{Binding Weight, StringFormat=N2,Mode=OneWay}"/>
                                                                     <Run Text="/"/>
                                                                     <Run Text="{Binding MaximumWeight,Mode=OneWay}"/>
                                                                     <Run Text="kg"/>
@@ -532,7 +536,7 @@
                                                                              VerticalAlignment="Center">
                                                                         <TextBlock Foreground="Gray"
                                                                                    FontFamily="/Fonts/#Inter Bold">
-                                                                    <Run Text="{Binding Size,Mode=OneWay}"/>
+                                                                    <Run Text="{Binding Size, StringFormat=N2,Mode=OneWay}"/>
                                                                     <Run Text="/"/>
                                                                     <Run Text="{Binding MaximumSize,Mode=OneWay}"/>
                                                                     <Run Text="m³"/>
@@ -631,7 +635,7 @@
                     </ItemsControl>
                     <controls:BetterButton Width="180" Height="65"
                                        HorizontalAlignment="Left"
-                                       Margin="0,10,0,20"
+                                       Margin="0,10,0,0"
                                        BorderThickness="2"
                                        CornerRadius="5"
                                        FontSize="27"
@@ -641,8 +645,9 @@
                                        DefaultForeground="#FFC88827"
                                        ForegroundHover="#fa9805"
                                        ForegroundPress="DarkOrange"
-                                       BorderPress="#FFC88827"
-                                       Command="{Binding AddPopupCommand}">
+                                       BorderPress="#B2FA9805"
+                                       Command="{Binding AddCommand}"
+                                       CommandParameter="{x:Type models:StoragePlace}">
                         <controls:BetterButton.Style>
                             <Style TargetType="controls:BetterButton" BasedOn="{StaticResource BetterButton}">
                                 <Style.Triggers>
@@ -686,13 +691,8 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <StackPanel.Visibility>
-                        <MultiBinding Converter="{StaticResource MultiVisibilityConverter}">
-                            <Binding Path="CurrentStoragePlaceProducts.Count" />
-                            <Binding Path="CurrentStoragePlace" />
-                        </MultiBinding>
-                    </StackPanel.Visibility>
+                <StackPanel Orientation="Vertical"
+                            Visibility="{Binding Path=CurrentStoragePlace, Converter={StaticResource VisibilityConverter}}">
                     <Border Background="#717277"
                         Height="2"
                         CornerRadius="1"
@@ -709,7 +709,7 @@
                                   FontSize="18"
                                   Margin="10,0,0,0"/>
                     </StackPanel>
-                    <ItemsControl ItemsSource="{Binding CurrentStoragePlaceProducts}">
+                    <ItemsControl ItemsSource="{Binding CurrentStoragePlace.StoragePlaceProducts}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel HorizontalAlignment="Left"/>
@@ -740,7 +740,7 @@
                                                     Width="25" Height="25"
                                                     Margin="10,0,0,0">
                                                     <controls:BetterButton Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                       CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=DataContext}"
+                                                                       CommandParameter="{Binding Path=DataContext, ElementName=StoragePlaceProductGrid}"
                                                                        DefaultForeground="White"
                                                                        ForegroundHover="#fa9805"
                                                                        ForegroundPress="DarkOrange"
@@ -926,7 +926,7 @@
                     </ItemsControl>
                     <controls:BetterButton Width="180" Height="65"
                                        HorizontalAlignment="Left"
-                                       Margin="0,10,0,20"
+                                       Margin="0,10,0,0"
                                        BorderThickness="2"
                                        CornerRadius="5"
                                        FontSize="27"
@@ -936,8 +936,9 @@
                                        DefaultForeground="#FFC88827"
                                        ForegroundHover="#fa9805"
                                        ForegroundPress="DarkOrange"
-                                       BorderPress="#FFC88827"
-                                       Command="{Binding AddPopupCommand}">
+                                       BorderPress="#B2FA9805"
+                                       Command="{Binding AddCommand}"
+                                       CommandParameter="{x:Type models:StoragePlaceProduct}" Click="BetterButton_Click_1">
                         <controls:BetterButton.Style>
                             <Style TargetType="controls:BetterButton" BasedOn="{StaticResource BetterButton}">
                                 <Style.Triggers>

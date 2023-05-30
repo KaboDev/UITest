@@ -23,14 +23,17 @@ namespace UITest.ViewModel
 
         private ProductViewModel _productVM;
         private StorageViewModel _storageVM;
+        private HistoryViewModel _historyVM;
 
         public RelayCommand ProductViewCommand { get; }
         public RelayCommand StorageViewCommand { get; }
+        public RelayCommand HistoryViewCommand { get; }
 
         public MainWindowViewModel()
         {
             _productVM = new ProductViewModel();
             _storageVM = new StorageViewModel();
+            _historyVM = new HistoryViewModel();
 
             ProductViewCommand = new RelayCommand(o => {
                 CurrentView = _productVM;
@@ -38,6 +41,10 @@ namespace UITest.ViewModel
             StorageViewCommand = new RelayCommand(o =>
             {
                 CurrentView = _storageVM;
+            });
+            HistoryViewCommand = new RelayCommand(o =>
+            {
+                CurrentView = _historyVM;
             });
 
             CurrentView = _storageVM;

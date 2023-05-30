@@ -54,6 +54,9 @@ namespace UITest.Core
                 case Elements.Image:
                     elementReturn = (T)(object)(element as ImageElement).ImagePath;
                     break;
+                case Elements.Dropdown:
+                    elementReturn = (T)(object)(element as DropdownElement).CurrentProduct;
+                    break;
             }
 
             return elementReturn;

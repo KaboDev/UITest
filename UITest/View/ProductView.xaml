@@ -30,7 +30,7 @@
                                     Height="75"
                                     CornerRadius="5"
                                     Background="#121318"
-                                    Margin="15,10,5,10">
+                                    Margin="20,20,5,10">
                                     <Grid>
                                         <TextBlock Text="{Binding Name}"
                                                  VerticalAlignment="Top"

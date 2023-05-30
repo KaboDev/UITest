@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UITest.View.Popups"
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:toolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:core="clr-namespace:UITest.Core"
+             xmlns:models="clr-namespace:UITest.Model"
              xmlns:converter="clr-namespace:UITest.Converter"
              xmlns:controls="clr-namespace:UITest.Controls"
              mc:Ignorable="d"
@@ -246,6 +246,27 @@
                     </Grid>
                 </StackPanel>
             </DataTemplate>
+
+            <DataTemplate x:Key="DropdownElement" DataType="{x:Type core:DropdownElement}">
+                <ComboBox ItemsSource="{Binding AvailableProducts}"
+                          SelectedItem="{Binding CurrentProduct, Mode=TwoWay}"
+                          Margin="0,5,0,0"
+                          VerticalContentAlignment="Center"
+                          Height="25">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <ComboBoxItem Margin="0,5,0,0"
+                                          Foreground="Black">
+                                <ComboBoxItem.Content>
+                                    <TextBlock Text="{Binding Name}"
+                                                   VerticalAlignment="Center"
+                                                   FontFamily="/Fonts/#Inter SemiBold"/>
+                                </ComboBoxItem.Content>
+                            </ComboBoxItem>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -305,7 +326,6 @@
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-
                 </ItemsControl>
             </Grid>
             <Grid Grid.Row="2">

@@ -83,8 +83,8 @@
     </ApplicationDefinition>
     <Compile Include="Converter\ImageSourceToVisibilityConverter.cs" />
     <Compile Include="Converter\IsLastItemConverter.cs" />
-    <Compile Include="Converter\MultiVisibilityConverter.cs" />
     <Compile Include="Converter\ProgressToColorConverter.cs" />
+    <Compile Include="Converter\VisibilityConverter.cs" />
     <Compile Include="Core\CustomExtensions.cs" />
     <Compile Include="Core\CustomPopup.cs" />
     <Compile Include="Core\ElementTemplateSelector.cs" />
@@ -94,10 +94,14 @@
     <Compile Include="Model\Storage.cs" />
     <Compile Include="Model\StoragePlace.cs" />
     <Compile Include="Model\StoragePlaceProduct.cs" />
+    <Compile Include="ViewModel\HistoryViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\PopupBaseViewModel.cs" />
     <Compile Include="ViewModel\ProductViewModel.cs" />
     <Compile Include="ViewModel\StorageViewModel.cs" />
+    <Compile Include="View\HistoryView.xaml.cs">
+      <DependentUpon>HistoryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\PopupBase.xaml.cs">
       <DependentUpon>PopupBase.xaml</DependentUpon>
     </Compile>
@@ -142,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Theme\SearchbarTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\HistoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
