@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using UITest.Core;
 using UITest.View;
 
@@ -28,6 +29,7 @@ namespace UITest.ViewModel
         public RelayCommand ProductViewCommand { get; }
         public RelayCommand StorageViewCommand { get; }
         public RelayCommand HistoryViewCommand { get; }
+        public RelayCommand CloseWindowCommand { get; }
 
         public MainWindowViewModel()
         {
@@ -47,7 +49,12 @@ namespace UITest.ViewModel
                 CurrentView = _historyVM;
             });
 
-            CurrentView = _storageVM;
+            CloseWindowCommand = new RelayCommand(o =>
+            {
+                Application.Current.Shutdown();
+            });
+
+            CurrentView = _productVM;
         }
     }
 }

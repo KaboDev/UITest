@@ -59,11 +59,11 @@
                         <StackPanel Margin="0,10,0,0">
                             <controls:BetterRadioButton Content="Products"
                                                         Icon="Dropbox"
+                                                        IsChecked="True"
                                                         Command="{Binding ProductViewCommand}"
                                                         Style="{StaticResource MenuTab}"/>
                             <controls:BetterRadioButton Content="Storage"
                                                         Icon="Warehouse"
-                                                        IsChecked="True"
                                                         Command="{Binding StorageViewCommand}"
                                                         Margin="0,10,0,0"
                                                         Style="{StaticResource MenuTab}"/>
@@ -130,7 +130,8 @@
                                FontStyle="Italic"/>
                 </StackPanel>
 
-                <controls:BetterButton Margin="0,15,15,0"
+                <controls:BetterButton Command="{Binding CloseWindowCommand}" 
+                                       Margin="0,15,15,0"
                                        FontSize="18"
                                        VerticalAlignment="Top"
                                        HorizontalAlignment="Right"
